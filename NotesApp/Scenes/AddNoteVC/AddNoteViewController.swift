@@ -14,9 +14,10 @@ final class AddNoteViewController: UIViewController {
     private var titleTextField = UITextField()
     private var descriptionTextField = UITextField()
     private var saveButton = UIButton()
+    private var saveButtonClicked: (() -> Void)?
+    private var viewModel = AddNoteViewModel()
     var titleText: String?
     var descriptionText: String?
-    private var saveButtonClicked: (() -> Void)?
     var noteID: NSManagedObjectID?
     
     //MARK: - Lifecycle
@@ -24,6 +25,7 @@ final class AddNoteViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         addTargets()
+        setDelegates()
         CoreDataManager.shared.retrieveData()
     }
     
@@ -46,9 +48,6 @@ final class AddNoteViewController: UIViewController {
         if let description = descriptionText {
             descriptionTextField.text = description
         }
-        
-        titleTextField.delegate = self
-        descriptionTextField.delegate = self
         
         configureTitleTextField()
         configureDescriptionTextField()
@@ -99,17 +98,22 @@ final class AddNoteViewController: UIViewController {
         saveButton.setTitleColor(.white, for: .normal)
     }
     
-    //MARK: - Actions
+    private func setDelegates() {
+        titleTextField.delegate = self
+        descriptionTextField.delegate = self
+    }
+    
     private func addTargets() {
         saveButton.addTarget(self, action: #selector(saveInfoToCoreData), for: .touchUpInside)
     }
     
+    //MARK: - Actions
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
     
     @objc func saveInfoToCoreData() {
-        CoreDataManager.shared.createData(title: titleTextField.text ?? "Could not save what u wrote - title", description: descriptionTextField.text ?? "Could not save what u wrote - description")
+        viewModel.savePressed(title: titleTextField.text, description: descriptionTextField.text)
         navigationController?.popViewController(animated: true)
         print("------------------------save clicked")
     }
