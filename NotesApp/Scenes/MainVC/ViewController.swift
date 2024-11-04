@@ -12,10 +12,20 @@ final class ViewController: UIViewController {
 
     //MARK: - Properties
     private var tableView = UITableView()
-    private var viewModel = ViewModel()
+    private var viewModel: ViewModel
     private var plusButton = UIButton()
     
     //MARK: - Lifecycle
+    
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setDelegates()
@@ -82,7 +92,9 @@ final class ViewController: UIViewController {
     
     //MARK: - Actions
     @objc func goToAddNotePage() {
-        navigationController?.pushViewController(AddNoteViewController(), animated: true)
+        let viewModel = AddNoteViewModel()
+        let viewController = AddNoteViewController(viewModel: viewModel)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 
 }
@@ -150,7 +162,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let note = CoreDataManager.shared.notes[indexPath.section]
-        let addNoteVC = AddNoteViewController()
+        let addNoteVC = AddNoteViewController(viewModel: AddNoteViewModel())
         addNoteVC.titleText = note.value(forKey: "title") as? String ?? ""
         addNoteVC.descriptionText = note.value(forKey: "descriptionBody") as? String ?? ""
         addNoteVC.noteID = note.objectID
