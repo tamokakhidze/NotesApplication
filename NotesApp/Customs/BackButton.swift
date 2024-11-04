@@ -9,12 +9,18 @@ import UIKit
 
 class BackButton: UIButton {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    init(width: CGFloat, height: CGFloat, backgroundImage: String = "", backgroundColor: UIColor) {
+        super.init(frame: .zero)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalToConstant: width).isActive = true
+        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        self.backgroundColor = backgroundColor
+        self.layer.cornerRadius = 15
+        self.setImage(UIImage(named: "backgroundImage"), for: .normal)
     }
-    */
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 }
