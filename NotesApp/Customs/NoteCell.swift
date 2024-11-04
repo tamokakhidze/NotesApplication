@@ -38,6 +38,7 @@ final class NoteCell: UITableViewCell {
         titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 290).isActive = true
         titleLabel.numberOfLines = 2
+        titleLabel.font = .systemFont(ofSize: 24, weight: .medium)
         return titleLabel
     }
     
