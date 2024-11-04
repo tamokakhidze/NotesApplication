@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BackButton: UIButton {
+final class BackButton: UIButton {
 
     init(width: CGFloat, height: CGFloat, backgroundImage: String = "", backgroundColor: UIColor) {
         super.init(frame: .zero)

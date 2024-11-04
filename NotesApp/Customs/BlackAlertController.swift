@@ -8,7 +8,7 @@
 import UIKit
 
 //MARK: - BlackAlertController
-class BlackAlertController: UIView {
+final class BlackAlertController: UIView {
 
     //MARK: - Properties
     private lazy var icon: UIImageView = {

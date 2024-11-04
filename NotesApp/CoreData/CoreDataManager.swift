@@ -5,7 +5,6 @@
 //  Created by Tamuna Kakhidze on 04.11.24.
 //
 
-import Foundation
 import UIKit
 import CoreData
 
@@ -16,10 +15,11 @@ protocol CoreDataManagerDelegate: AnyObject {
 class CoreDataManager {
     
     public static let shared = CoreDataManager()
+    weak var delegate: CoreDataManagerDelegate?
     var viewModel = ViewModel()
     var notes: [NSManagedObject] = []
+    
     private init() {}
-    weak var delegate: CoreDataManagerDelegate?
     
     func createData(title: String, description: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }

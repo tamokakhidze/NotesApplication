@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 //MARK: - ViewModel
-class ViewModel {
+final class ViewModel {
     
     //MARK: - Methods
     func viewDidLoad() {
