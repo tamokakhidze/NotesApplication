@@ -23,8 +23,8 @@ final class BlackAlertController: UIView {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.tintColor = .white
         cancelButton.backgroundColor = .green
-        cancelButton.layer.cornerRadius = 5
-        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.layer.cornerRadius = Sizing.Button.cancelButtonCornerRadius
+        cancelButton.setTitle(StringConstants.Alert.cancelTitle, for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         return cancelButton
     }()
@@ -34,8 +34,8 @@ final class BlackAlertController: UIView {
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.tintColor = .white
         deleteButton.backgroundColor = .red
-        deleteButton.layer.cornerRadius = 5
-        deleteButton.setTitle("Delete", for: .normal)
+        deleteButton.layer.cornerRadius = Sizing.Button.deleteButtonCornerRadius
+        deleteButton.setTitle(StringConstants.Alert.deleteTitle, for: .normal)
         deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
         return deleteButton
     }()
@@ -43,7 +43,7 @@ final class BlackAlertController: UIView {
     private lazy var buttonsStackView: UIStackView = {
         let buttonsStackView = UIStackView()
         buttonsStackView.axis = .horizontal
-        buttonsStackView.spacing = 20
+        buttonsStackView.spacing = Sizing.Alert.stackViewSpacing
         buttonsStackView.alignment = .center
         buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
         return buttonsStackView
@@ -52,11 +52,11 @@ final class BlackAlertController: UIView {
     
     private lazy var alertMessage: UILabel = {
         let message = UILabel()
-        message.text = "Are you sure you want to delete note?"
+        message.text = StringConstants.Alert.message
         message.translatesAutoresizingMaskIntoConstraints = false
         message.textColor = .white
-        message.font = .systemFont(ofSize: 20)
-        message.numberOfLines = 0
+        message.font = .systemFont(ofSize: Sizing.Alert.messageFontSize)
+        message.numberOfLines = .zero
         message.textAlignment = .center
         return message
     }()
@@ -78,32 +78,33 @@ final class BlackAlertController: UIView {
     //MARK: - Ui Setup
     private func setupView() {
         backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        layer.cornerRadius = 20
+        layer.cornerRadius = Sizing.Alert.cornerRadius
         
-        addSubview(icon)
-        addSubview(alertMessage)
-        buttonsStackView.addArrangedSubview(cancelButton)
-        buttonsStackView.addArrangedSubview(deleteButton)
-        addSubview(buttonsStackView)
+        setupHierarchy()
         
+        setConstraints()
+    }
+    
+    private func setupHierarchy() {
+        buttonsStackView.addArrangedSubviews(cancelButton, deleteButton)
+        addSubviews(icon, alertMessage, buttonsStackView)
+    }
+    
+    private func setConstraints() {
         NSLayoutConstraint.activate([
-            icon.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            icon.topAnchor.constraint(equalTo: topAnchor, constant: Sizing.Alert.iconTopAnchor),
             icon.centerXAnchor.constraint(equalTo: centerXAnchor),
-            icon.heightAnchor.constraint(equalToConstant: 50),
-            icon.widthAnchor.constraint(equalToConstant: 50),
             
-            alertMessage.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 10),
+            alertMessage.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: Sizing.Alert.messageTopAnchor),
             alertMessage.centerXAnchor.constraint(equalTo: centerXAnchor),
-            alertMessage.widthAnchor.constraint(equalToConstant: 262),
-            alertMessage.heightAnchor.constraint(equalToConstant: 48),
+            alertMessage.widthAnchor.constraint(equalToConstant: Sizing.Alert.messageWidth),
+            alertMessage.heightAnchor.constraint(equalToConstant: Sizing.Alert.messageHeight),
             
-            cancelButton.widthAnchor.constraint(equalToConstant: 112),
-            deleteButton.widthAnchor.constraint(equalToConstant: 112),
+            cancelButton.widthAnchor.constraint(equalToConstant: Sizing.Alert.buttonsWidth),
+            deleteButton.widthAnchor.constraint(equalToConstant: Sizing.Alert.buttonsWidth),
 
-            buttonsStackView.topAnchor.constraint(equalTo: alertMessage.bottomAnchor, constant: 24),
-            buttonsStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 38),
-            buttonsStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -38),
-            buttonsStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -38)
+            buttonsStackView.topAnchor.constraint(equalTo: alertMessage.bottomAnchor, constant: Sizing.Alert.buttonsStackViewTopAnchor),
+            buttonsStackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
@@ -116,4 +117,8 @@ final class BlackAlertController: UIView {
         deleteAction?()
     }
 
+}
+
+#Preview {
+    BlackAlertController()
 }

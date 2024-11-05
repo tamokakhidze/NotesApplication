@@ -40,16 +40,12 @@ final class AddNoteViewController: UIViewController {
     
     //MARK: - UI Setup
     private func setupUI() {
-        let backButton = BackButton(width: 48, height: 48, backgroundImage: "backButtonImage", backgroundColor: .mediumGray)
-        backButton.setImage(UIImage(named: "backButtonImage"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.leftBarButtonItem = backBarButtonItem
-        self.navigationItem.title = ""
-        
         view.backgroundColor = .background
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+    
+        setupNavigationBar()
+        configureTitleTextField()
+        configureDescriptionTextField()
+        configureSaveButton()
         
         if let title = titleText {
             titleTextField.text = title
@@ -57,25 +53,33 @@ final class AddNoteViewController: UIViewController {
         if let description = descriptionText {
             descriptionTextField.text = description
         }
+    }
+    
+    private func setupNavigationBar() {
+        let backButton = BackButton(width: Sizing.AddNoteVC.backButtonWidth, height: Sizing.AddNoteVC.backButtonHeight, backgroundImage: StringConstants.AddNoteVC.backButtonImage, backgroundColor: .mediumGray)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = backBarButtonItem
+        self.navigationItem.title = StringConstants.AddNoteVC.navigationTitle
         
-        configureTitleTextField()
-        configureDescriptionTextField()
-        configureSaveButton()
+        // Set title text attributes
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
     private func configureTitleTextField() {
         view.addSubview(titleTextField)
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
-        titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 141).isActive = true
+        titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.AddNoteVC.titleTopAnchor).isActive = true
         titleTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
-        titleTextField.font = .systemFont(ofSize: 35)
+        titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.AddNoteVC.titleTrailingAnchor).isActive = true
+        titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.AddNoteVC.titleLeadingAnchor).isActive = true
+        titleTextField.font = .systemFont(ofSize: Sizing.AddNoteVC.titleFontSize)
         titleTextField.textColor = .white
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.placeholder
         ]
-        titleTextField.attributedPlaceholder = NSAttributedString(string: "Title", attributes: attributes)
+        titleTextField.attributedPlaceholder = NSAttributedString(string: StringConstants.AddNoteVC.titlePlaceholder, attributes: attributes)
         
     }
     
@@ -84,25 +88,22 @@ final class AddNoteViewController: UIViewController {
         descriptionTextField.translatesAutoresizingMaskIntoConstraints = false
         descriptionTextField.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 5).isActive = true
         descriptionTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        descriptionTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        descriptionTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
+        descriptionTextField.widthAnchor.constraint(greaterThanOrEqualToConstant: Sizing.AddNoteVC.descriptionWidth).isActive = true
         descriptionTextField.textColor = .white
-        descriptionTextField.font = .systemFont(ofSize: 22)
+        descriptionTextField.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
         descriptionTextField.textColor = .white
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.placeholder
         ]
-        descriptionTextField.attributedPlaceholder = NSAttributedString(string: "Type something...", attributes: attributes)
+        descriptionTextField.attributedPlaceholder = NSAttributedString(string: StringConstants.AddNoteVC.descriptionPlaceholder, attributes: attributes)
         
     }
     
     private func configureSaveButton() {
         view.addSubview(saveButton)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
-        saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        saveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        saveButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        saveButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.AddNoteVC.saveButtonBottomAnchor).isActive = true
+        saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.AddNoteVC.saveButtonTrailingAnchor).isActive = true
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
     }

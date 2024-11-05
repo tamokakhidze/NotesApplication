@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-final class ViewController: UIViewController {
+final class MainViewController: UIViewController {
 
     //MARK: - Properties
     private var tableView = UITableView()
@@ -39,10 +39,7 @@ final class ViewController: UIViewController {
         view.backgroundColor = .background
         configureTableView()
         configurePlusButton()
-        title = "Facts"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        setupNavigationBar()
     }
     
     private func loadData() {
@@ -52,14 +49,21 @@ final class ViewController: UIViewController {
         }
     }
     
+    private func setupNavigationBar() {
+        title = StringConstants.MainVC.title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+    }
+    
     private func configureTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 131).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -139).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        tableView.rowHeight = 110
+        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.MainVC.tableViewTopAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.tableViewBottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.MainVC.tableViewLeadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.tableViewTrailingAnchor).isActive = true
+        tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(NoteCell.self, forCellReuseIdentifier: "NotesCell")
@@ -69,14 +73,14 @@ final class ViewController: UIViewController {
     private func configurePlusButton() {
         view.addSubview(plusButton)
         plusButton.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
-        plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        plusButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        plusButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        plusButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.plutButtonBottomAnchor).isActive = true
+        plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.plusButtonTrailingAnchor).isActive = true
+        plusButton.widthAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonWidth).isActive = true
+        plusButton.heightAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonHeight).isActive = true
         plusButton.backgroundColor = .background
-        plusButton.layer.cornerRadius = 35
+        plusButton.layer.cornerRadius = Sizing.MainVC.plusButtonCornerRadius
         plusButton.layer.shadowColor = UIColor.black.cgColor
-        plusButton.layer.shadowRadius = 10
+        plusButton.layer.shadowRadius = Sizing.MainVC.plusButtonShadowRadius
         plusButton.layer.shadowOpacity = 1
         plusButton.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         plusButton.setImage(UIImage(resource: .plusButton), for: .normal)
@@ -100,7 +104,7 @@ final class ViewController: UIViewController {
 }
 
 //MARK: - UITableViewDataSource
-extension ViewController: UITableViewDataSource {
+extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1
     }
@@ -159,7 +163,7 @@ extension ViewController: UITableViewDataSource {
 }
 
 //MARK: - UITableViewDelegate
-extension ViewController: UITableViewDelegate {
+extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let note = CoreDataManager.shared.notes[indexPath.section]
         let addNoteVC = AddNoteViewController(viewModel: AddNoteViewModel())
@@ -180,7 +184,7 @@ extension ViewController: UITableViewDelegate {
     
 }
 //MARK: - CoreDataManagerDelegate
-extension ViewController: CoreDataManagerDelegate {
+extension MainViewController: CoreDataManagerDelegate {
     func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()

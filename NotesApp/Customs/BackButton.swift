@@ -15,8 +15,8 @@ final class BackButton: UIButton {
         self.widthAnchor.constraint(equalToConstant: width).isActive = true
         self.heightAnchor.constraint(equalToConstant: height).isActive = true
         self.backgroundColor = backgroundColor
-        self.layer.cornerRadius = 15
-        self.setImage(UIImage(named: "backgroundImage"), for: .normal)
+        self.layer.cornerRadius = Sizing.Button.backButtonCornerRadius
+        self.setImage(UIImage(named: backgroundImage), for: .normal)
     }
     
     required init?(coder: NSCoder) {
