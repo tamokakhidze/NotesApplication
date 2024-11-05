@@ -41,6 +41,7 @@ struct Sizing {
         static let deleteButtonAnchor: CGFloat = -12
     }
     
+    // MARK: - AddNoteVC Sizing
     struct AddNoteVC {
         static let backButtonWidth: CGFloat = 48
         static let backButtonHeight: CGFloat = 48
@@ -56,6 +57,7 @@ struct Sizing {
         static let saveButtonTrailingAnchor: CGFloat = -25
     }
     
+    // MARK: - MainVC Sizing
     struct MainVC {
         static let tableViewTopAnchor: CGFloat = 131
         static let tableViewBottomAnchor: CGFloat = -139

@@ -42,12 +42,10 @@ final class AddNoteViewController: UIViewController {
     //MARK: - UI Setup
     private func setupUI() {
         view.backgroundColor = .background
-        
         setupNavigationBar()
         configureTitleTextField()
         configureDescriptionTextView()
         configureSaveButton()
-        
         updateTextFields()
     }
     
@@ -155,6 +153,7 @@ final class AddNoteViewController: UIViewController {
     
 }
 
+//MARK: - UITextFieldDelegate
 extension AddNoteViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
@@ -177,6 +176,7 @@ extension AddNoteViewController: UITextFieldDelegate {
     
 }
 
+//MARK: - UITextViewDelegate
 extension AddNoteViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         descriptionPlaceholderLabel.isHidden = true

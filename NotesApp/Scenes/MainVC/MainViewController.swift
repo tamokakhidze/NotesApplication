@@ -16,7 +16,6 @@ final class MainViewController: UIViewController {
     private var plusButton = UIButton()
     
     //MARK: - Lifecycle
-    
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
