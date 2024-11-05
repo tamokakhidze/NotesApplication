@@ -49,6 +49,7 @@ struct Sizing {
         static let titleLeadingAnchor: CGFloat = 25
         static let titleFontSize: CGFloat = 35
         static let descriptionWidth: CGFloat = 360
+        static let descriptionHeight: CGFloat = 450
         static let descriptionFontSize: CGFloat = 22
         
         static let saveButtonBottomAnchor: CGFloat = -30

@@ -9,10 +9,11 @@ import UIKit
 import CoreData
 
 final class AddNoteViewController: UIViewController {
-
+    
     //MARK: - Properties
     private var titleTextField = UITextField()
-    private var descriptionTextField = UITextField()
+    private var descriptionTextView = UITextView()
+    private var descriptionPlaceholderLabel = UILabel()
     private var saveButton = UIButton()
     private var saveButtonClicked: (() -> Void)?
     private var viewModel: AddNoteViewModel
@@ -41,17 +42,33 @@ final class AddNoteViewController: UIViewController {
     //MARK: - UI Setup
     private func setupUI() {
         view.backgroundColor = .background
-    
+        
         setupNavigationBar()
         configureTitleTextField()
-        configureDescriptionTextField()
+        configureDescriptionTextView()
         configureSaveButton()
         
+        updateTextFields()
+    }
+    
+    private func updateTextFields() {
         if let title = titleText {
             titleTextField.text = title
         }
+        
         if let description = descriptionText {
-            descriptionTextField.text = description
+            descriptionTextView.text = description
+        }
+        
+        updateDescriptionPlaceholder()
+    }
+    
+    private func updateDescriptionPlaceholder() {
+        if let description = descriptionText {
+            descriptionTextView.text = description
+            descriptionPlaceholderLabel.isHidden = !description.isEmpty
+        } else {
+            descriptionPlaceholderLabel.isHidden = false
         }
     }
     
@@ -62,7 +79,6 @@ final class AddNoteViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = backBarButtonItem
         self.navigationItem.title = StringConstants.AddNoteVC.navigationTitle
         
-        // Set title text attributes
         let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
@@ -83,20 +99,29 @@ final class AddNoteViewController: UIViewController {
         
     }
     
-    private func configureDescriptionTextField() {
-        view.addSubview(descriptionTextField)
-        descriptionTextField.translatesAutoresizingMaskIntoConstraints = false
-        descriptionTextField.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 5).isActive = true
-        descriptionTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        descriptionTextField.widthAnchor.constraint(greaterThanOrEqualToConstant: Sizing.AddNoteVC.descriptionWidth).isActive = true
-        descriptionTextField.textColor = .white
-        descriptionTextField.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
-        descriptionTextField.textColor = .white
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.placeholder
-        ]
-        descriptionTextField.attributedPlaceholder = NSAttributedString(string: StringConstants.AddNoteVC.descriptionPlaceholder, attributes: attributes)
+    private func configureDescriptionTextView() {
+        view.addSubview(descriptionTextView)
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 10).isActive = true
+        descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        descriptionTextView.widthAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionWidth).isActive = true
+        descriptionTextView.heightAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionHeight).isActive = true
+        descriptionTextView.textColor = .white
+        descriptionTextView.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
+        descriptionTextView.backgroundColor = .background
+        descriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 5)
         
+        descriptionPlaceholderLabel.text = StringConstants.AddNoteVC.descriptionPlaceholder
+        descriptionPlaceholderLabel.textColor = UIColor.placeholder
+        descriptionPlaceholderLabel.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
+        descriptionPlaceholderLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(descriptionPlaceholderLabel)
+        descriptionPlaceholderLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionPlaceholderLabel.leadingAnchor.constraint(equalTo: descriptionTextView.leadingAnchor, constant: 5).isActive = true
+        descriptionPlaceholderLabel.topAnchor.constraint(equalTo: descriptionTextView.topAnchor, constant: 10).isActive = true
+        
+        descriptionPlaceholderLabel.isHidden = !descriptionTextView.text.isEmpty
     }
     
     private func configureSaveButton() {
@@ -110,7 +135,7 @@ final class AddNoteViewController: UIViewController {
     
     private func setDelegates() {
         titleTextField.delegate = self
-        descriptionTextField.delegate = self
+        descriptionTextView.delegate = self
     }
     
     private func addTargets() {
@@ -123,7 +148,7 @@ final class AddNoteViewController: UIViewController {
     }
     
     @objc func saveInfoToCoreData() {
-        viewModel.savePressed(title: titleTextField.text, description: descriptionTextField.text)
+        viewModel.savePressed(title: titleTextField.text, description: descriptionTextView.text)
         navigationController?.popViewController(animated: true)
         print("------------------------save clicked")
     }
@@ -140,8 +165,6 @@ extension AddNoteViewController: UITextFieldDelegate {
         
         if textField == titleTextField {
             note.setValue(textField.text, forKey: "title")
-        } else if textField == descriptionTextField {
-            note.setValue(textField.text, forKey: "descriptionBody")
         }
         
         do {
@@ -151,5 +174,30 @@ extension AddNoteViewController: UITextFieldDelegate {
             print("Failed to update note: \(error)")
         }
     }
+    
+}
 
+extension AddNoteViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        descriptionPlaceholderLabel.isHidden = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
+              let noteID = noteID,
+              let note = managedContext.object(with: noteID) as? NSManagedObject else {
+            return
+        }
+        
+        note.setValue(descriptionTextView.text, forKey: "descriptionBody")
+        
+        do {
+            try managedContext.save()
+            print("Description updated successfully.")
+        } catch {
+            print("Failed to update description: \(error)")
+        }
+        
+        descriptionPlaceholderLabel.isHidden = !textView.text.isEmpty
+    }
 }
