@@ -65,7 +65,7 @@ struct Sizing {
         static let tableViewTrailingAnchor: CGFloat = -25
         static let tableViewRowHeight: CGFloat = 110
         
-        static let plutButtonBottomAnchor: CGFloat = -30
+        static let plusButtonBottomAnchor: CGFloat = -30
         static let plusButtonTrailingAnchor: CGFloat = -25
         static let plusButtonWidth: CGFloat = 70
         static let plusButtonHeight: CGFloat = 70

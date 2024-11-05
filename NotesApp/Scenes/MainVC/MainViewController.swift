@@ -36,6 +36,7 @@ final class MainViewController: UIViewController {
     //MARK: - UI Setup
     private func setupUI() {
         view.backgroundColor = .background
+        setViewHierarchy()
         configureTableView()
         configurePlusButton()
         setupNavigationBar()
@@ -55,13 +56,20 @@ final class MainViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
+    private func setViewHierarchy() {
+        view.addSubviews(tableView, plusButton)
+    }
+    
     private func configureTableView() {
-        view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.MainVC.tableViewTopAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.tableViewBottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.MainVC.tableViewLeadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.tableViewTrailingAnchor).isActive = true
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.MainVC.tableViewTopAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.tableViewBottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.MainVC.tableViewLeadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.tableViewTrailingAnchor)
+        ])
+        
         tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
         tableView.dataSource = self
         tableView.delegate = self
@@ -70,12 +78,15 @@ final class MainViewController: UIViewController {
     }
     
     private func configurePlusButton() {
-        view.addSubview(plusButton)
         plusButton.translatesAutoresizingMaskIntoConstraints = false
-        plusButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.plutButtonBottomAnchor).isActive = true
-        plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.plusButtonTrailingAnchor).isActive = true
-        plusButton.widthAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonWidth).isActive = true
-        plusButton.heightAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonHeight).isActive = true
+       
+        NSLayoutConstraint.activate([
+            plusButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.plusButtonBottomAnchor),
+            plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.plusButtonTrailingAnchor),
+            plusButton.widthAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonWidth),
+            plusButton.heightAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonHeight)
+        ])
+        
         plusButton.backgroundColor = .background
         plusButton.layer.cornerRadius = Sizing.MainVC.plusButtonCornerRadius
         plusButton.layer.shadowColor = UIColor.black.cgColor
