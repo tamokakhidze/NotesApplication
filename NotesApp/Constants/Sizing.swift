@@ -43,8 +43,8 @@ struct Sizing {
     
     // MARK: - AddNoteVC Sizing
     struct AddNoteVC {
-        static let backButtonWidth: CGFloat = 48
-        static let backButtonHeight: CGFloat = 48
+        static let backButtonWidth: CGFloat = 44
+        static let backButtonHeight: CGFloat = 44
         static let titleTopAnchor: CGFloat = 141
         static let titleTrailingAnchor: CGFloat = -25
         static let titleLeadingAnchor: CGFloat = 25

@@ -118,7 +118,3 @@ final class BlackAlertController: UIView {
     }
 
 }
-
-#Preview {
-    BlackAlertController()
-}

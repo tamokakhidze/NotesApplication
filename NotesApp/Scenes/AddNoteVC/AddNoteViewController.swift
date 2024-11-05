@@ -60,15 +60,11 @@ final class AddNoteViewController: UIViewController {
         
         updateDescriptionPlaceholder()
     }
-    
+
     private func updateDescriptionPlaceholder() {
-        if let description = descriptionText {
-            descriptionTextView.text = description
-            descriptionPlaceholderLabel.isHidden = !description.isEmpty
-        } else {
-            descriptionPlaceholderLabel.isHidden = false
-        }
+        descriptionPlaceholderLabel.isHidden = !(descriptionTextView.text?.isEmpty ?? true)
     }
+
     
     private func setupNavigationBar() {
         let backButton = BackButton(width: Sizing.AddNoteVC.backButtonWidth, height: Sizing.AddNoteVC.backButtonHeight, backgroundImage: StringConstants.AddNoteVC.backButtonImage, backgroundColor: .mediumGray)
@@ -157,10 +153,11 @@ final class AddNoteViewController: UIViewController {
 extension AddNoteViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
-              let noteID = noteID,
-              let note = managedContext.object(with: noteID) as? NSManagedObject else {
+              let noteID = noteID else {
             return
         }
+        
+        let note = managedContext.object(with: noteID)
         
         if textField == titleTextField {
             note.setValue(textField.text, forKey: "title")
@@ -184,11 +181,11 @@ extension AddNoteViewController: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
-              let noteID = noteID,
-              let note = managedContext.object(with: noteID) as? NSManagedObject else {
+              let noteID = noteID else {
             return
         }
         
+        let note = managedContext.object(with: noteID)
         note.setValue(descriptionTextView.text, forKey: "descriptionBody")
         
         do {
