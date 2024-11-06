@@ -44,7 +44,7 @@ final class AddNoteViewController: UIViewController {
         return label
     }()
     
-    private var saveButton: UIButton = {
+    private let saveButton: UIButton = {
         let button = UIButton()
         button.setTitle("Save", for: .normal)
         button.setTitleColor(.white, for: .normal)

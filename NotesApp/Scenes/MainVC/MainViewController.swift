@@ -12,7 +12,7 @@ import CoreData
 final class MainViewController: UIViewController {
     
     //MARK: - Properties
-    private var tableView: UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
@@ -21,7 +21,7 @@ final class MainViewController: UIViewController {
         return tableView
     }()
     
-    private var plusButton: UIButton = {
+    private let plusButton: UIButton = {
         let plusButton = UIButton()
         plusButton.translatesAutoresizingMaskIntoConstraints = false
         plusButton.backgroundColor = .background

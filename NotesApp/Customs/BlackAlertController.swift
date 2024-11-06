@@ -11,7 +11,7 @@ import UIKit
 final class BlackAlertController: UIView {
 
     //MARK: - Properties
-    private lazy var icon: UIImageView = {
+    private let icon: UIImageView = {
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.image = .alertIcon
@@ -40,7 +40,7 @@ final class BlackAlertController: UIView {
         return deleteButton
     }()
     
-    private lazy var buttonsStackView: UIStackView = {
+    private let buttonsStackView: UIStackView = {
         let buttonsStackView = UIStackView()
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = Sizing.Alert.stackViewSpacing
@@ -50,7 +50,7 @@ final class BlackAlertController: UIView {
         
     }()
     
-    private lazy var alertMessage: UILabel = {
+    private let alertMessage: UILabel = {
         let message = UILabel()
         message.text = StringConstants.Alert.message
         message.translatesAutoresizingMaskIntoConstraints = false
