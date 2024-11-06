@@ -31,7 +31,6 @@ final class AddNoteViewController: UIViewController {
         textView.textColor = .white
         textView.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
         textView.backgroundColor = .background
-        textView.textContainerInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 5)
         return textView
     }()
     
@@ -127,8 +126,7 @@ final class AddNoteViewController: UIViewController {
         NSLayoutConstraint.activate([
             titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.AddNoteVC.titleTopAnchor),
             titleTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.AddNoteVC.titleTrailingAnchor),
-            titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.AddNoteVC.titleLeadingAnchor),
+            titleTextField.widthAnchor.constraint(equalToConstant: Sizing.AddNoteVC.titleWidth),
             
             descriptionTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 10),
             descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor),

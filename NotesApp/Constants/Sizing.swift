@@ -46,8 +46,7 @@ struct Sizing {
         static let backButtonWidth: CGFloat = 44
         static let backButtonHeight: CGFloat = 44
         static let titleTopAnchor: CGFloat = 141
-        static let titleTrailingAnchor: CGFloat = -25
-        static let titleLeadingAnchor: CGFloat = 25
+        static let titleWidth: CGFloat = 360
         static let titleFontSize: CGFloat = 35
         static let descriptionWidth: CGFloat = 360
         static let descriptionHeight: CGFloat = 450
@@ -71,7 +70,7 @@ struct Sizing {
         static let plusButtonHeight: CGFloat = 70
         static let plusButtonCornerRadius: CGFloat = plusButtonWidth / 2
         static let plusButtonShadowRadius: CGFloat = 10
-        static let plusButtonShadowOpacity: CGFloat = 1
+        static let plusButtonShadowOpacity: Float = 1
         static let plusButtonShadowWidth: CGFloat = 2.0
         static let plusButtonShadowHeight: CGFloat = 2.0
         static let heightForFooterInSection: CGFloat = 20
