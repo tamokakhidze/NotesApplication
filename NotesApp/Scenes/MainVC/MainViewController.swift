@@ -28,8 +28,10 @@ final class MainViewController: UIViewController {
         plusButton.layer.cornerRadius = Sizing.MainVC.plusButtonCornerRadius
         plusButton.layer.shadowColor = UIColor.black.cgColor
         plusButton.layer.shadowRadius = Sizing.MainVC.plusButtonShadowRadius
-        plusButton.layer.shadowOpacity = 1
-        plusButton.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        plusButton.layer.shadowOpacity = Sizing.MainVC.plusButtonShadowOpacity
+        plusButton.layer.shadowOffset = CGSize(
+            width: Sizing.MainVC.plusButtonShadowWidth,
+            height: Sizing.MainVC.plusButtonShadowHeight)
         plusButton.setImage(UIImage(resource: .plusButton), for: .normal)
         return plusButton
     }()
@@ -72,8 +74,8 @@ final class MainViewController: UIViewController {
     private func setupNavigationBar() {
         title = StringConstants.MainVC.title
         navigationController?.navigationBar.prefersLargeTitles = true
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.navigationTitle]
+        navigationController?.navigationBar.largeTitleTextAttributes = textAttributes
     }
     
     private func setViewHierarchy() {
