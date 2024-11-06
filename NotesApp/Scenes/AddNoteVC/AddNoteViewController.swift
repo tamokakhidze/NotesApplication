@@ -9,10 +9,11 @@ import UIKit
 import CoreData
 
 final class AddNoteViewController: UIViewController {
-
+    
     //MARK: - Properties
     private var titleTextField = UITextField()
-    private var descriptionTextField = UITextField()
+    private var descriptionTextView = UITextView()
+    private var descriptionPlaceholderLabel = UILabel()
     private var saveButton = UIButton()
     private var saveButtonClicked: (() -> Void)?
     private var viewModel: AddNoteViewModel
@@ -40,76 +41,107 @@ final class AddNoteViewController: UIViewController {
     
     //MARK: - UI Setup
     private func setupUI() {
-        let backButton = BackButton(width: 48, height: 48, backgroundImage: "backButtonImage", backgroundColor: .mediumGray)
-        backButton.setImage(UIImage(named: "backButtonImage"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.leftBarButtonItem = backBarButtonItem
-        self.navigationItem.title = ""
-        
         view.backgroundColor = .background
-        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
-        
+        setViewHierarchy()
+        setupNavigationBar()
+        configureTitleTextField()
+        configureDescriptionTextView()
+        configureSaveButton()
+        updateTextFields()
+    }
+    
+    private func updateTextFields() {
         if let title = titleText {
             titleTextField.text = title
         }
+        
         if let description = descriptionText {
-            descriptionTextField.text = description
+            descriptionTextView.text = description
         }
         
-        configureTitleTextField()
-        configureDescriptionTextField()
-        configureSaveButton()
+        updateDescriptionPlaceholder()
+    }
+    
+    private func updateDescriptionPlaceholder() {
+        descriptionPlaceholderLabel.isHidden = !(descriptionTextView.text?.isEmpty ?? true)
+    }
+    
+    private func setViewHierarchy() {
+        view.addSubviews(titleTextField, descriptionTextView, descriptionPlaceholderLabel, saveButton)
+    }
+    private func setupNavigationBar() {
+        let backButton = BackButton(width: Sizing.AddNoteVC.backButtonWidth,
+                                    height: Sizing.AddNoteVC.backButtonHeight,
+                                    backgroundImage: StringConstants.AddNoteVC.backButtonImage,
+                                    backgroundColor: .mediumGray)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = backBarButtonItem
+        self.navigationItem.title = StringConstants.AddNoteVC.navigationTitle
+        
+        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
     }
     
     private func configureTitleTextField() {
-        view.addSubview(titleTextField)
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
-        titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 141).isActive = true
-        titleTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
-        titleTextField.font = .systemFont(ofSize: 35)
+        titleTextField.font = .systemFont(ofSize: Sizing.AddNoteVC.titleFontSize)
         titleTextField.textColor = .white
+        
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.placeholder
         ]
-        titleTextField.attributedPlaceholder = NSAttributedString(string: "Title", attributes: attributes)
+        titleTextField.attributedPlaceholder = NSAttributedString(string: StringConstants.AddNoteVC.titlePlaceholder, attributes: attributes)
         
+        NSLayoutConstraint.activate([
+            titleTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.AddNoteVC.titleTopAnchor),
+            titleTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.AddNoteVC.titleTrailingAnchor),
+            titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.AddNoteVC.titleLeadingAnchor)
+        ])
     }
     
-    private func configureDescriptionTextField() {
-        view.addSubview(descriptionTextField)
-        descriptionTextField.translatesAutoresizingMaskIntoConstraints = false
-        descriptionTextField.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 5).isActive = true
-        descriptionTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        descriptionTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        descriptionTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25).isActive = true
-        descriptionTextField.textColor = .white
-        descriptionTextField.font = .systemFont(ofSize: 22)
-        descriptionTextField.textColor = .white
-        let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.placeholder
-        ]
-        descriptionTextField.attributedPlaceholder = NSAttributedString(string: "Type something...", attributes: attributes)
+    private func configureDescriptionTextView() {
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextView.textColor = .white
+        descriptionTextView.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
+        descriptionTextView.backgroundColor = .background
+        descriptionTextView.textContainerInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 5)
+
+        NSLayoutConstraint.activate([
+            descriptionTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 10),
+            descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            descriptionTextView.widthAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionWidth),
+            descriptionTextView.heightAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionHeight)
+        ])
         
+        descriptionPlaceholderLabel.text = StringConstants.AddNoteVC.descriptionPlaceholder
+        descriptionPlaceholderLabel.textColor = UIColor.placeholder
+        descriptionPlaceholderLabel.font = .systemFont(ofSize: Sizing.AddNoteVC.descriptionFontSize)
+        descriptionPlaceholderLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            descriptionPlaceholderLabel.leadingAnchor.constraint(equalTo: descriptionTextView.leadingAnchor, constant: 5),
+            descriptionPlaceholderLabel.topAnchor.constraint(equalTo: descriptionTextView.topAnchor, constant: 10)
+        ])
+
+        descriptionPlaceholderLabel.isHidden = !descriptionTextView.text.isEmpty
     }
-    
+
     private func configureSaveButton() {
-        view.addSubview(saveButton)
         saveButton.translatesAutoresizingMaskIntoConstraints = false
-        saveButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
-        saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25).isActive = true
-        saveButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        saveButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
         saveButton.setTitle("Save", for: .normal)
         saveButton.setTitleColor(.white, for: .normal)
+
+        NSLayoutConstraint.activate([
+            saveButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.AddNoteVC.saveButtonBottomAnchor),
+            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.AddNoteVC.saveButtonTrailingAnchor)
+        ])
     }
-    
+
     private func setDelegates() {
         titleTextField.delegate = self
-        descriptionTextField.delegate = self
+        descriptionTextView.delegate = self
     }
     
     private func addTargets() {
@@ -122,25 +154,25 @@ final class AddNoteViewController: UIViewController {
     }
     
     @objc func saveInfoToCoreData() {
-        viewModel.savePressed(title: titleTextField.text, description: descriptionTextField.text)
+        viewModel.savePressed(title: titleTextField.text, description: descriptionTextView.text)
         navigationController?.popViewController(animated: true)
         print("------------------------save clicked")
     }
     
 }
 
+//MARK: - UITextFieldDelegate
 extension AddNoteViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
-              let noteID = noteID,
-              let note = managedContext.object(with: noteID) as? NSManagedObject else {
+              let noteID = noteID else {
             return
         }
         
+        let note = managedContext.object(with: noteID)
+        
         if textField == titleTextField {
             note.setValue(textField.text, forKey: "title")
-        } else if textField == descriptionTextField {
-            note.setValue(textField.text, forKey: "descriptionBody")
         }
         
         do {
@@ -150,5 +182,31 @@ extension AddNoteViewController: UITextFieldDelegate {
             print("Failed to update note: \(error)")
         }
     }
+    
+}
 
+//MARK: - UITextViewDelegate
+extension AddNoteViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        descriptionPlaceholderLabel.isHidden = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext,
+              let noteID = noteID else {
+            return
+        }
+        
+        let note = managedContext.object(with: noteID)
+        note.setValue(descriptionTextView.text, forKey: "descriptionBody")
+        
+        do {
+            try managedContext.save()
+            print("Description updated successfully.")
+        } catch {
+            print("Failed to update description: \(error)")
+        }
+        
+        descriptionPlaceholderLabel.isHidden = !textView.text.isEmpty
+    }
 }

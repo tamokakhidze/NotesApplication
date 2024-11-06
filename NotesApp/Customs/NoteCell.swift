@@ -18,7 +18,7 @@ final class NoteCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         titleLabel = configureTitleLabel()
         deleteButton = configureDeleteButton()
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = Sizing.NoteCell.cornerRadius
         contentView.backgroundColor = .cell
         sendSubviewToBack(contentView)
         contentView.clipsToBounds = true
@@ -34,11 +34,11 @@ final class NoteCell: UITableViewCell {
         titleLabel.textAlignment = .left
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textColor = .black
-        titleLabel.heightAnchor.constraint(equalToConstant: 67).isActive = true
+        titleLabel.heightAnchor.constraint(equalToConstant: Sizing.NoteCell.titleHeight).isActive = true
         titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 290).isActive = true
-        titleLabel.numberOfLines = 2
-        titleLabel.font = .systemFont(ofSize: 24, weight: .medium)
+        titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: Sizing.NoteCell.titleWidth).isActive = true
+        titleLabel.numberOfLines = Sizing.NoteCell.titleNumberOfLines
+        titleLabel.font = .systemFont(ofSize: Sizing.NoteCell.titleFontSize)
         return titleLabel
     }
     
@@ -46,13 +46,13 @@ final class NoteCell: UITableViewCell {
         let deleteButton = UIButton()
         addSubview(deleteButton)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        deleteButton.heightAnchor.constraint(equalToConstant: 34).isActive = true
-        deleteButton.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        deleteButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
-        deleteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12).isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: Sizing.Button.cellDeleteButtonHeight).isActive = true
+        deleteButton.widthAnchor.constraint(equalToConstant: Sizing.Button.cellDeleteButtonHeight).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Sizing.NoteCell.deleteButtonAnchor).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Sizing.NoteCell.deleteButtonAnchor).isActive = true
         deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
         deleteButton.backgroundColor = .darkGray
-        deleteButton.layer.cornerRadius = 15
+        deleteButton.layer.cornerRadius = Sizing.Button.cellDeleteButtonCornerRadius
         deleteButton.tintColor = .white
         
         deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
