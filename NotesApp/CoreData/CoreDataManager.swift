@@ -40,7 +40,6 @@ final class CoreDataManager {
         
         do {
             try managedContext.save()
-            //notes.append(note)
             notes.insert(note, at: 0)
             delegate?.reloadTableView()
         } catch let error as NSError {
