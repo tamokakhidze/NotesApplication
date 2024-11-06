@@ -32,6 +32,7 @@ final class NoteCell: UITableViewCell {
         return button
     }()
     
+    static let identifier = "NoteCell"
     var deleteAction: (() -> Void)?
     
     //MARK: - Init

@@ -91,6 +91,7 @@ final class AddNoteViewController: UIViewController {
         setupNavigationBar()
         configureDescriptionPlaceholder()
         updateTextFields()
+        addDoneButtonToKeyboard()
     }
     
     private func updateTextFields() {
@@ -132,7 +133,7 @@ final class AddNoteViewController: UIViewController {
             descriptionTextView.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 10),
             descriptionTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             descriptionTextView.widthAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionWidth),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: Sizing.AddNoteVC.descriptionHeight),
+            descriptionTextView.heightAnchor.constraint(lessThanOrEqualToConstant: Sizing.AddNoteVC.descriptionHeight),
             
             descriptionPlaceholderLabel.leadingAnchor.constraint(equalTo: descriptionTextView.leadingAnchor, constant: 5),
             descriptionPlaceholderLabel.topAnchor.constraint(equalTo: descriptionTextView.topAnchor, constant: 10),
@@ -142,18 +143,35 @@ final class AddNoteViewController: UIViewController {
         ])
     }
     
+    // MARK: - Placeholder Configuration
     private func configureDescriptionPlaceholder() {
         descriptionPlaceholderLabel.isHidden = !descriptionTextView.text.isEmpty
     }
     
+    // MARK: - Delegates Setup
     private func setDelegates() {
         titleTextField.delegate = self
         descriptionTextView.delegate = self
     }
     
+    // MARK: - Button Targets Setup
     private func addTargets() {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveInfoToCoreData), for: .touchUpInside)
+    }
+    
+    // MARK: - Toolbar setup
+    private func addDoneButtonToKeyboard() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(dismissKeyboard))
+        
+        toolbar.setItems([doneButton], animated: false)
+        
+        titleTextField.inputAccessoryView = toolbar
+        descriptionTextView.inputAccessoryView = toolbar
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
     }
     
     //MARK: - Actions
@@ -166,6 +184,9 @@ final class AddNoteViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 
 //MARK: - UITextFieldDelegate

@@ -16,7 +16,7 @@ final class MainViewController: UIViewController {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
-        tableView.register(NoteCell.self, forCellReuseIdentifier: "NotesCell")
+        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
         tableView.backgroundColor = .clear
         return tableView
     }()
@@ -124,7 +124,7 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NotesCell") as? NoteCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: NoteCell.identifier) as? NoteCell
         cell?.backgroundColor = .clear
         let note = CoreDataManager.shared.notes[indexPath.section]
         if let title = note.value(forKey: "title") as? String {
