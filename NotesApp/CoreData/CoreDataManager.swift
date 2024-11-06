@@ -8,19 +8,24 @@
 import UIKit
 import CoreData
 
+//MARK: - Protocols
 protocol CoreDataManagerDelegate: AnyObject {
     func reloadTableView()
 }
 
-class CoreDataManager {
+//MARK: - CoreDataManager
+final class CoreDataManager {
     
+    //MARK: - Properties
     public static let shared = CoreDataManager()
     weak var delegate: CoreDataManagerDelegate?
     var viewModel = ViewModel()
     var notes: [NSManagedObject] = []
     
+    //MARK: - Init
     private init() {}
     
+    //MARK: - Methods
     func createData(title: String, description: String) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
@@ -35,8 +40,6 @@ class CoreDataManager {
         do {
             try managedContext.save()
             notes.append(note)
-            print("data saved")
-            print("and this is array\(note)")
             delegate?.reloadTableView()
         } catch let error as NSError {
             print("Could not save items. error: \(error), \(error.userInfo)")
@@ -55,7 +58,7 @@ class CoreDataManager {
             notes = result
             delegate?.reloadTableView()
             for data in result {
-                print("So this is values: \(data.value(forKey: "title") as Any)")
+                print("Values: \(data.value(forKey: "title") as Any)")
             }
         } catch {
             print("Failed to retrieve data")
@@ -71,7 +74,7 @@ class CoreDataManager {
         
         do {
             try managedContext.save()
-            print("Deleted note sucessfully.")
+            print("Deleted note successfully.")
             delegate?.reloadTableView()
         } catch let error as NSError {
             print("Could not save context after deletion. error: \(error), \(error.userInfo)")
