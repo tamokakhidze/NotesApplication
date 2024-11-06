@@ -8,12 +8,33 @@
 import UIKit
 import CoreData
 
+//MARK: - MainViewController
 final class MainViewController: UIViewController {
-
+    
     //MARK: - Properties
-    private var tableView = UITableView()
+    private var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
+        tableView.register(NoteCell.self, forCellReuseIdentifier: "NotesCell")
+        tableView.backgroundColor = .clear
+        return tableView
+    }()
+    
+    private var plusButton: UIButton = {
+        let plusButton = UIButton()
+        plusButton.translatesAutoresizingMaskIntoConstraints = false
+        plusButton.backgroundColor = .background
+        plusButton.layer.cornerRadius = Sizing.MainVC.plusButtonCornerRadius
+        plusButton.layer.shadowColor = UIColor.black.cgColor
+        plusButton.layer.shadowRadius = Sizing.MainVC.plusButtonShadowRadius
+        plusButton.layer.shadowOpacity = 1
+        plusButton.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        plusButton.setImage(UIImage(resource: .plusButton), for: .normal)
+        return plusButton
+    }()
+    
     private var viewModel: ViewModel
-    private var plusButton = UIButton()
     
     //MARK: - Lifecycle
     init(viewModel: ViewModel) {
@@ -33,12 +54,11 @@ final class MainViewController: UIViewController {
         addTargets()
     }
     
-    //MARK: - UI Setup
+    //MARK: - Ui Setup
     private func setupUI() {
         view.backgroundColor = .background
         setViewHierarchy()
-        configureTableView()
-        configurePlusButton()
+        setConstraints()
         setupNavigationBar()
     }
     
@@ -60,40 +80,18 @@ final class MainViewController: UIViewController {
         view.addSubviews(tableView, plusButton)
     }
     
-    private func configureTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: Sizing.MainVC.tableViewTopAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.tableViewBottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizing.MainVC.tableViewLeadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.tableViewTrailingAnchor)
-        ])
-        
-        tableView.rowHeight = Sizing.MainVC.tableViewRowHeight
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(NoteCell.self, forCellReuseIdentifier: "NotesCell")
-        tableView.backgroundColor = .clear
-    }
-    
-    private func configurePlusButton() {
-        plusButton.translatesAutoresizingMaskIntoConstraints = false
-       
-        NSLayoutConstraint.activate([
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.tableViewTrailingAnchor),
+            
             plusButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Sizing.MainVC.plusButtonBottomAnchor),
             plusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Sizing.MainVC.plusButtonTrailingAnchor),
             plusButton.widthAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonWidth),
             plusButton.heightAnchor.constraint(equalToConstant: Sizing.MainVC.plusButtonHeight)
         ])
-        
-        plusButton.backgroundColor = .background
-        plusButton.layer.cornerRadius = Sizing.MainVC.plusButtonCornerRadius
-        plusButton.layer.shadowColor = UIColor.black.cgColor
-        plusButton.layer.shadowRadius = Sizing.MainVC.plusButtonShadowRadius
-        plusButton.layer.shadowOpacity = 1
-        plusButton.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        plusButton.setImage(UIImage(resource: .plusButton), for: .normal)
     }
     
     private func addTargets() {
@@ -102,6 +100,8 @@ final class MainViewController: UIViewController {
     
     private func setDelegates() {
         CoreDataManager.shared.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     //MARK: - Actions
@@ -110,13 +110,13 @@ final class MainViewController: UIViewController {
         let viewController = AddNoteViewController(viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)
     }
-
+    
 }
 
 //MARK: - UITableViewDataSource
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        Sizing.MainVC.numberOfRowsInSection
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -176,16 +176,16 @@ extension MainViewController: UITableViewDataSource {
 extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let note = CoreDataManager.shared.notes[indexPath.section]
-        let addNoteVC = AddNoteViewController(viewModel: AddNoteViewModel())
+        let viewModel = AddNoteViewModel()
+        let addNoteVC = AddNoteViewController(viewModel: viewModel)
         addNoteVC.titleText = note.value(forKey: "title") as? String ?? ""
         addNoteVC.descriptionText = note.value(forKey: "descriptionBody") as? String ?? ""
         addNoteVC.noteID = note.objectID
         navigationController?.pushViewController(addNoteVC, animated: true)
-        
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        20
+        Sizing.MainVC.heightForFooterInSection
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

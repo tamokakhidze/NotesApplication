@@ -71,5 +71,7 @@ struct Sizing {
         static let plusButtonHeight: CGFloat = 70
         static let plusButtonCornerRadius: CGFloat = plusButtonWidth / 2
         static let plusButtonShadowRadius: CGFloat = 10
+        static let heightForFooterInSection: CGFloat = 20
+        static let numberOfRowsInSection: Int = 1
     }
 }
