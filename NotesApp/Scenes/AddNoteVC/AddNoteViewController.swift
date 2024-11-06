@@ -46,7 +46,7 @@ final class AddNoteViewController: UIViewController {
     
     private let saveButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Save", for: .normal)
+        button.setTitle("Add note", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
