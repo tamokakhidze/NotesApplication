@@ -36,10 +36,12 @@ final class CoreDataManager {
         let note = NSManagedObject(entity: notesEntity, insertInto: managedContext)
         note.setValue(title, forKey: "title")
         note.setValue(description, forKey: "descriptionBody")
+        note.setValue(Date(), forKey: "dateAdded")
         
         do {
             try managedContext.save()
-            notes.append(note)
+            //notes.append(note)
+            notes.insert(note, at: 0)
             delegate?.reloadTableView()
         } catch let error as NSError {
             print("Could not save items. error: \(error), \(error.userInfo)")
@@ -52,6 +54,8 @@ final class CoreDataManager {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Notes")
+        let sortDescriptor = NSSortDescriptor(key: "dateAdded", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
         
         do {
             let result = try managedContext.fetch(fetchRequest) as! [NSManagedObject]
